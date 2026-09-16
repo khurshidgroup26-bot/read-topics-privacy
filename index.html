@@ -3,105 +3,675 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Privacy Policy - Read Topics</title>
+<title>26 Mart Mobiles — Wah Cantt | Mobile Phones Online</title>
+<meta name="description" content="26 Mart Mobiles - Wah Cantt and Basti mobile store. Order online, pay at delivery or shop pickup, with free delivery in Wah Cantt.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- ===== FIREBASE (compat SDK) ===== -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+
 <style>
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-    max-width: 720px;
-    margin: 40px auto;
-    padding: 0 20px;
-    line-height: 1.6;
-    color: #1a1a1a;
-    background: #ffffff;
+  :root{
+    --navy:#12172B; --navy-2:#1B2140; --paper:#F4F5FA; --card:#FFFFFF;
+    --ink:#181B2E; --muted:#666B85; --line:#E4E6F0;
+    --gold:#F0A63B; --gold-dark:#C97F16;
+    --green:#189F58; --green-bg:#E7F7EE;
+    --red:#D64545;
+    --radius:14px;
   }
-  h1 {
-    font-size: 26px;
-    margin-bottom: 4px;
-    color: #0D6B5D;
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:'Inter',sans-serif; line-height:1.5;
   }
-  .updated {
-    color: #666;
-    font-size: 14px;
-    margin-bottom: 32px;
+  h1,h2,h3,.display{font-family:'Space Grotesk',sans-serif; font-weight:700; letter-spacing:-0.01em;}
+  a{color:inherit;}
+  img{max-width:100%; display:block;}
+  .wrap{max-width:1080px; margin:0 auto; padding:0 18px;}
+
+  /* ---------- Top bar ---------- */
+  .topbar{
+    background:var(--navy); color:#fff; padding:10px 0;
+    font-size:12.5px;
   }
-  h2 {
-    font-size: 19px;
-    margin-top: 32px;
-    color: #084C43;
+  .topbar .wrap{display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap;}
+  .topbar .brand{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:15px; letter-spacing:0.01em;}
+  .topbar .brand span{color:var(--gold);}
+  .topbar .contact-links{display:flex; gap:14px;}
+  .topbar .contact-links a{text-decoration:none; opacity:.9; font-weight:500;}
+  .topbar .contact-links a:hover{opacity:1;}
+
+  /* ---------- Offer strip ---------- */
+  .offer-strip{
+    background:var(--gold); color:var(--navy); overflow:hidden; white-space:nowrap;
+    border-bottom:1px solid var(--gold-dark);
   }
-  p, li {
-    font-size: 15px;
+  .offer-strip .track{
+    display:inline-block; padding:8px 0; font-size:13px; font-weight:600;
+    animation:scroll-left 26s linear infinite;
   }
-  ul {
-    padding-left: 22px;
+  .offer-strip .track span{margin:0 26px;}
+  @keyframes scroll-left{
+    0%{transform:translateX(0);}
+    100%{transform:translateX(-50%);}
   }
-  a {
-    color: #0D6B5D;
+  @media (prefers-reduced-motion: reduce){
+    .offer-strip .track{animation:none;}
   }
-  .contact {
-    background: #F7F5EE;
-    padding: 16px 20px;
-    border-radius: 10px;
-    margin-top: 8px;
+
+  /* ---------- Hero ---------- */
+  .hero{
+    background:linear-gradient(160deg,var(--navy) 0%, var(--navy-2) 100%);
+    color:#fff; padding:44px 0 52px;
   }
+  .hero .wrap{display:flex; flex-direction:column; gap:14px;}
+  .hero h1{font-size:clamp(26px,6vw,40px); margin:0; line-height:1.15;}
+  .hero p{margin:0; color:#C7CAE0; font-size:15.5px; max-width:480px;}
+  .hero-badges{display:flex; flex-wrap:wrap; gap:8px; margin-top:8px;}
+  .badge{
+    background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.18);
+    padding:6px 12px; border-radius:999px; font-size:12.5px; font-weight:500; color:#EDEFFA;
+  }
+  .hero-cta{display:flex; gap:10px; margin-top:14px; flex-wrap:wrap;}
+  .btn{
+    display:inline-flex; align-items:center; gap:8px; padding:12px 20px; border-radius:10px;
+    font-weight:600; font-size:14.5px; text-decoration:none; border:none; cursor:pointer;
+  }
+  .btn-gold{background:var(--gold); color:var(--navy);}
+  .btn-gold:active{background:var(--gold-dark);}
+  .btn-outline{background:transparent; border:1px solid rgba(255,255,255,.35); color:#fff;}
+
+  /* ---------- Section heading ---------- */
+  .section{padding:38px 0;}
+  .section-head{margin-bottom:18px;}
+  .section-head h2{font-size:22px; margin:0 0 6px;}
+  .section-head p{margin:0; color:var(--muted); font-size:14px;}
+
+  /* ---------- Product grid ---------- */
+  .grid{display:grid; grid-template-columns:repeat(2,1fr); gap:14px;}
+  @media (min-width:640px){ .grid{grid-template-columns:repeat(3,1fr);} }
+  @media (min-width:920px){ .grid{grid-template-columns:repeat(4,1fr);} }
+
+  .pcard{
+    background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+    overflow:hidden; display:flex; flex-direction:column; position:relative;
+  }
+  .pcard .imgwrap{
+    aspect-ratio:1/1; background:#EDEFF6; display:flex; align-items:center; justify-content:center;
+    overflow:hidden;
+  }
+  .pcard .imgwrap img{width:100%; height:100%; object-fit:cover;}
+  .pcard .imgwrap .noimg{color:#9CA0BE; font-size:12px; text-align:center; padding:10px;}
+  .gift-flag{
+    position:absolute; top:8px; left:8px; background:var(--navy); color:var(--gold);
+    font-size:10.5px; font-weight:600; padding:3px 8px; border-radius:6px;
+  }
+  .pcard .body{padding:10px 11px 12px; display:flex; flex-direction:column; gap:5px; flex:1;}
+  .pcard .pname{font-size:13.5px; font-weight:600; margin:0; line-height:1.3;}
+  .pcard .pprice{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:16px; color:var(--navy);}
+  .stock-row{display:flex; align-items:center; gap:5px; font-size:11.5px;}
+  .dot{width:7px; height:7px; border-radius:50%; background:var(--green);}
+  .dot.out{background:var(--red);}
+  .stock-row.in{color:var(--green);}
+  .stock-row.out{color:var(--red);}
+  .order-btn{
+    margin-top:auto; background:var(--green); color:#fff; border:none; padding:9px 0;
+    border-radius:8px; font-weight:600; font-size:13px; cursor:pointer; text-align:center; text-decoration:none;
+  }
+  .order-btn.disabled{background:#C9CBDA; pointer-events:none;}
+  .empty-note{color:var(--muted); font-size:13.5px; padding:30px 0; text-align:center;}
+  .chip{background:#fff; border:1px solid var(--line); padding:6px 13px; border-radius:999px; font-size:12.5px; font-weight:500; cursor:pointer; color:var(--muted);}
+  .chip.active{background:var(--navy); border-color:var(--navy); color:#fff;}
+
+  /* ---------- Why us ---------- */
+  .why-grid{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
+  @media (min-width:640px){ .why-grid{grid-template-columns:repeat(4,1fr);} }
+  .why-card{
+    background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+    padding:16px; text-align:left;
+  }
+  .why-card .ic{font-size:22px; margin-bottom:8px;}
+  .why-card h3{font-size:14px; margin:0 0 4px;}
+  .why-card p{font-size:12.5px; color:var(--muted); margin:0; line-height:1.4;}
+
+  /* ---------- Shops ---------- */
+  .shops{background:#fff; border-top:1px solid var(--line); border-bottom:1px solid var(--line);}
+  .shop-grid{display:grid; grid-template-columns:1fr; gap:14px;}
+  @media (min-width:640px){ .shop-grid{grid-template-columns:1fr 1fr;} }
+  .shop-card{border:1px solid var(--line); border-radius:var(--radius); padding:18px; background:var(--paper);}
+  .shop-card h3{font-size:15.5px; margin:0 0 6px;}
+  .shop-card .tag{display:inline-block; font-size:11px; font-weight:600; color:var(--green); background:var(--green-bg); padding:2px 9px; border-radius:999px; margin-bottom:8px;}
+  .shop-card address{font-style:normal; font-size:13.5px; color:var(--muted); margin:0 0 10px; line-height:1.5;}
+  .shop-card .btn{padding:8px 14px; font-size:13px;}
+
+  /* ---------- Contact CTA ---------- */
+  .contact-cta{background:var(--navy); color:#fff; text-align:center;}
+  .contact-cta h2{font-size:22px; margin:0 0 8px; color:#fff;}
+  .contact-cta p{color:#C7CAE0; margin:0 0 18px; font-size:14px;}
+  .contact-cta .hero-cta{justify-content:center;}
+
+  /* ---------- Other sites ---------- */
+  .other-sites{display:flex; flex-wrap:wrap; gap:10px;}
+  .other-sites a{
+    border:1px solid var(--line); background:#fff; padding:9px 15px; border-radius:9px;
+    font-size:13px; font-weight:500; text-decoration:none; color:var(--navy);
+  }
+
+  /* ---------- Footer ---------- */
+  footer{padding:22px 0 30px; text-align:center; color:var(--muted); font-size:12px;}
+  footer a{color:var(--muted); text-decoration:underline;}
+
+  /* ---------- Floating WhatsApp ---------- */
+  .float-wa{
+    position:fixed; bottom:18px; right:18px; background:#25D366; color:#fff;
+    width:52px; height:52px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+    text-decoration:none; box-shadow:0 6px 18px rgba(0,0,0,.25); z-index:40;
+  }
+  .float-wa svg{width:27px; height:27px;}
+
+  /* ---------- Product/detail/order/auth modals ---------- */
+  .modal{position:fixed;inset:0;background:rgba(10,12,25,.72);display:none;align-items:center;justify-content:center;z-index:200;padding:16px;overflow:auto}
+  .modal.show{display:flex}.modal-box{background:#fff;border-radius:16px;max-width:760px;width:100%;max-height:92vh;overflow:auto;padding:20px;position:relative}
+  .modal-close{position:absolute;right:12px;top:10px;border:0;background:var(--paper);width:34px;height:34px;border-radius:50%;font-size:20px;cursor:pointer}
+  .detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}@media(max-width:650px){.detail-grid{grid-template-columns:1fr}}
+  .detail-image{width:100%;aspect-ratio:1/1;object-fit:contain;background:#f1f2f7;border-radius:12px;cursor:zoom-in}.variant-list{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}.variant-btn{border:1px solid var(--line);background:#fff;padding:8px 11px;border-radius:8px;cursor:pointer}.variant-btn.active{background:var(--navy);color:#fff}
+  .old-price{text-decoration:line-through;color:#8a8da2;font-size:13px;margin-right:7px}.sale-price{font-family:'Space Grotesk';font-weight:700;font-size:22px;color:var(--navy)}
+  .specs{white-space:pre-line;background:var(--paper);padding:12px;border-radius:10px;font-size:13px;color:var(--muted);margin-top:12px}.share-row{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.small-btn{border:1px solid var(--line);background:#fff;padding:8px 11px;border-radius:8px;cursor:pointer;font-weight:600}
+  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}@media(max-width:600px){.form-grid{grid-template-columns:1fr}}.form-grid input,.form-grid textarea,.form-grid select{width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;font:inherit}.form-grid textarea{min-height:80px}.full{grid-column:1/-1}.userbar{display:flex;gap:8px;align-items:center;justify-content:flex-end;padding:8px 0}.userbar button{border:1px solid var(--line);background:#fff;border-radius:8px;padding:7px 10px;cursor:pointer;font-weight:600}.featured{box-shadow:0 0 0 2px var(--gold) inset}.featured-label{position:absolute;top:8px;right:8px;background:var(--gold);color:var(--navy);font-size:10px;font-weight:700;padding:3px 7px;border-radius:5px}.view-count{font-size:11px;color:var(--muted)}
+
+  /* ---------- Admin ---------- */
+  .admin-gate{
+    position:fixed; inset:0; background:rgba(10,12,25,.6); display:none;
+    align-items:center; justify-content:center; z-index:100; padding:20px;
+  }
+  .admin-gate.show{display:flex;}
+  .admin-box{background:#fff; border-radius:var(--radius); padding:20px; max-width:320px; width:100%;}
+  .admin-box h3{margin:0 0 10px; font-size:16px;}
+  .admin-box input{width:100%; padding:10px; border:1px solid var(--line); border-radius:8px; font-size:15px; margin-bottom:10px;}
+  .admin-box .row{display:flex; gap:8px;}
+  .admin-box button{flex:1; padding:10px; border-radius:8px; border:none; font-weight:600; cursor:pointer;}
+  .admin-box .cancel{background:var(--paper); color:var(--ink);}
+  .admin-box .go{background:var(--navy); color:#fff;}
+  .admin-err{color:var(--red); font-size:12.5px; min-height:16px;}
+
+  #adminPanel{display:none; background:#fff; border-top:4px solid var(--gold);}
+  #adminPanel .wrap{padding-top:24px; padding-bottom:36px;}
+  .demo-banner{background:#FFF3D6; border:1px solid #F0D48A; color:#7A5A00; font-size:12.5px; padding:9px 14px; border-radius:9px; margin-bottom:16px;}
+  .admin-form{background:var(--paper); border:1px solid var(--line); border-radius:var(--radius); padding:16px; margin-bottom:22px;}
+  .admin-form .f-row{display:flex; gap:10px; flex-wrap:wrap;}
+  .admin-form .f-row > div{flex:1; min-width:140px;}
+  .admin-form label{display:block; font-size:12.5px; color:var(--muted); margin:10px 0 4px;}
+  .admin-form input, .admin-form select{
+    width:100%; padding:9px 10px; border:1px solid var(--line); border-radius:8px; font-size:14px;
+  }
+  .admin-form .save-btn{margin-top:14px; background:var(--navy); color:#fff; border:none; padding:11px 18px; border-radius:9px; font-weight:600; cursor:pointer;}
+  .admin-msg{font-size:13px; margin-top:8px; min-height:16px;}
+  .admin-msg.ok{color:var(--green);}
+  .admin-msg.err{color:var(--red);}
+  .admin-table{width:100%; border-collapse:collapse; font-size:13px;}
+  .admin-table th, .admin-table td{text-align:left; padding:8px 6px; border-bottom:1px solid var(--line); vertical-align:middle;}
+  .admin-table img{width:38px; height:38px; object-fit:cover; border-radius:6px; background:#eee;}
+  .admin-table input[type=number], .admin-table input[type=text]{width:80px; padding:5px 6px; font-size:12.5px; border:1px solid var(--line); border-radius:6px;}
+  .admin-table .del{color:var(--red); background:none; border:none; cursor:pointer; font-size:12.5px;}
+  .admin-table .upd{color:var(--navy); background:none; border:1px solid var(--line); padding:4px 8px; border-radius:6px; cursor:pointer; font-size:12px;}
+  .close-admin{background:none; border:1px solid var(--line); padding:7px 14px; border-radius:8px; font-size:12.5px; cursor:pointer; margin-top:6px;}
 </style>
 </head>
 <body>
 
-<h1>Privacy Policy</h1>
-<p class="updated">App: Read Topics &nbsp;|&nbsp; Last updated: September 12, 2026</p>
+<!-- ======================= TOP BAR ======================= -->
+<div class="topbar">
+  <div class="wrap">
+    <div class="brand">26 <span>Mart</span> Mobiles</div>
+    <div class="contact-links">
+      <a href="tel:+923390011126">📞 0339-0011126</a>
+      <a href="https://wa.me/923068988411" target="_blank" rel="noopener">💬 0306-8988411</a>
+    </div>
+  </div>
+</div>
+<div class="userbar wrap"><button onclick="openAuthModal('login')">Login</button><button onclick="openAuthModal('signup')">Sign Up</button><span id="userStatus" style="font-size:12px;color:var(--muted)"></span><button onclick="showAdminIfAuthorized()">Admin</button></div>
 
-<p>This Privacy Policy explains how the "Read Topics" mobile application ("the App", "we", "us") handles information when you use it. The App is developed and maintained by Muhammad Ihsan Ilahi Khursheed.</p>
-
-<h2>1. Overview</h2>
-<p>Read Topics lets you browse educational/informational topics and download them for offline reading. The App does not require you to create an account, log in, or provide any personal information to use it.</p>
-
-<h2>2. Information We Do Not Collect</h2>
-<p>The App does not collect, request, or store:</p>
-<ul>
-  <li>Your name, email address, or phone number</li>
-  <li>Login credentials or account information (no sign-in is required)</li>
-  <li>Location data</li>
-  <li>Payment information</li>
-  <li>Contacts, photos, or files from your device (other than what the App itself saves, described below)</li>
-</ul>
-
-<h2>3. Content Data (Firebase Cloud Firestore)</h2>
-<p>The App reads publicly available topic content (text and images) from a Firebase Cloud Firestore database so it can be displayed to you. This content is provided by the App's administrator and is not linked to your personal identity.</p>
-
-<h2>4. Data Stored On Your Device</h2>
-<p>When you choose to download a topic for offline reading, the App saves the following locally on your device only:</p>
-<ul>
-  <li>The topic's text content</li>
-  <li>Any images associated with that topic</li>
-  <li>A local index of what you've downloaded, so it can be shown in "My Downloads"</li>
-</ul>
-<p>This information stays on your device. We do not have access to it, and it is not uploaded anywhere. You can delete any downloaded topic at any time from within the App, which removes it from your device.</p>
-
-<h2>5. Permissions Used</h2>
-<p>The App may request access to device storage solely to save downloaded topics (text and images) for offline use. This permission is used only for that purpose.</p>
-
-<h2>6. Third-Party Services</h2>
-<p>The App uses Google Firebase (Cloud Firestore) to deliver content. Firebase may process standard technical data (such as your device's IP address) as part of providing this infrastructure, in accordance with Google's own privacy practices. You can review Google's Privacy Policy at <a href="https://policies.google.com/privacy" target="_blank">https://policies.google.com/privacy</a>.</p>
-<p>The App does not use advertising SDKs, analytics trackers, or any other third-party services beyond Firebase.</p>
-
-<h2>7. Children's Privacy</h2>
-<p>The App does not knowingly collect personal information from anyone, including children. Since no account creation or personal data submission is required, the App can be used without providing any personal details.</p>
-
-<h2>8. Data Sharing</h2>
-<p>We do not sell, rent, or share any user data with third parties, because we do not collect personal data in the first place.</p>
-
-<h2>9. Data Security</h2>
-<p>Content downloaded for offline use is stored within the App's private storage area on your device, in line with standard Android app sandboxing protections.</p>
-
-<h2>10. Changes to This Policy</h2>
-<p>We may update this Privacy Policy from time to time. Any changes will be posted on this page with an updated "Last updated" date.</p>
-
-<h2>11. Contact Us</h2>
-<div class="contact">
-  <p>If you have any questions about this Privacy Policy, please contact us:</p>
-  <p>Email: <a href="mailto:khurshidgroup26@gmail.com">khurshidgroup26@gmail.com</a></p>
+<!-- ======================= OFFER STRIP ======================= -->
+<div class="offer-strip">
+  <div class="track" id="offerTrack"></div>
 </div>
 
+<!-- ======================= HERO ======================= -->
+<section class="hero">
+  <div class="wrap">
+    <h1>New Mobile, Delivered to Your Door — No Advance Payment</h1>
+    <p>Shop from our Wah Cantt and Basti locations. Order online and pay only when the phone is delivered or when you collect it from the shop.</p>
+    <div class="hero-badges">
+      <span class="badge">✔ No Advance Payment</span>
+      <span class="badge">🚚 Free Wah Cantt Delivery</span>
+      <span class="badge">🎁 Free Gift with Selected Phones</span>
+      <span class="badge">📆 Installment Options Available</span>
+    </div>
+    <div class="hero-cta">
+      <a class="btn btn-gold" href="#phones">View Mobiles</a>
+      <a class="btn btn-outline" href="tel:+923390011126">Call Us</a>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= PRODUCTS ======================= -->
+<section class="section" id="phones">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Available Mobiles</h2>
+      <p>Choose a model, compare its variants and specs, then place your order on the website. Pay at delivery or at shop pickup.</p>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:18px;">
+      <input type="text" id="searchInput" placeholder="Search by mobile or brand..." oninput="onSearch(this.value)" style="padding:11px 14px; border:1px solid var(--line); border-radius:10px; font-size:14px; background:#fff;">
+      <div class="chips" id="categoryChips" style="display:flex; gap:7px; flex-wrap:wrap;"></div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <select id="companyFilter" onchange="onCompanyChange(this.value)" style="padding:9px 11px; border:1px solid var(--line); border-radius:9px; font-size:13px; background:#fff; color:var(--ink);"><option value="all">All Brands</option></select>
+        <select id="priceFilter" onchange="onPriceChange(this.value)" style="padding:9px 11px; border:1px solid var(--line); border-radius:9px; font-size:13px; background:#fff; color:var(--ink);">
+          <option value="all">All Prices</option>
+          <option value="0-30000">0 – 30,000</option>
+          <option value="30000-60000">30,000 – 60,000</option>
+          <option value="60000-100000">60,000 – 100,000</option>
+          <option value="100000-999999999">100,000+</option>
+        </select>
+      </div>
+    </div>
+    <div id="loadingNote" class="empty-note">Phones load ho rahe hain...</div>
+    <div class="grid" id="productGrid"></div>
+    <div class="empty-note" id="emptyNote" style="display:none;">No mobiles are listed right now. Please check again soon.</div>
+  </div>
+</section>
+
+<!-- ======================= WHY US ======================= -->
+<section class="section" style="padding-top:0;">
+  <div class="wrap">
+    <div class="why-grid">
+      <div class="why-card">
+        <div class="ic">🚫💳</div>
+        <h3>No Advance Payment</h3>
+        <p>No advance payment is required. Pay when you receive the phone or collect it from the shop.</p>
+      </div>
+      <div class="why-card">
+        <div class="ic">🏍️</div>
+        <h3>Free Home Delivery</h3>
+        <p>Free delivery is available within Wah Cantt, subject to the store's delivery coverage.</p>
+      </div>
+      <div class="why-card">
+        <div class="ic">🎁</div>
+        <h3>Free Gift on Selected Phones</h3>
+        <p>Gift availability may vary by model and current stock.</p>
+      </div>
+      <div class="why-card">
+        <div class="ic">📆</div>
+        <h3>Installment Options</h3>
+        <p>Installment availability and terms may vary by model. Contact the store for details.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= SHOPS ======================= -->
+<section class="shops">
+  <div class="wrap" style="padding:38px 0;">
+    <div class="section-head">
+      <h2>Our Shops</h2>
+      <p>Visit either location if you prefer to inspect the phone before purchase.</p>
+    </div>
+    <div class="shop-grid">
+      <div class="shop-card">
+        <span class="tag">Shop 1 — Wah Cantt</span>
+        <h3>26 Mart Mobiles</h3>
+        <address>Sabri Street, Masjid-e-Ghousia ke qareeb, Wah Cantt</address>
+        <a class="btn btn-gold" href="https://wa.me/923068988411" target="_blank" rel="noopener">Call Shop</a>
+      </div>
+      <div class="shop-card">
+        <span class="tag">Shop 2 — Basti</span>
+        <h3>Madina Communication</h3>
+        <address>Izzat Ali Shah Plaza, Goal Chowk, Basti</address>
+        <a class="btn btn-gold" href="https://wa.me/923068988411" target="_blank" rel="noopener">Call Shop</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= CONTACT CTA ======================= -->
+<section class="section contact-cta">
+  <div class="wrap">
+    <h2>Need Help? Contact Us</h2>
+    <p>For price, stock or order questions, call us or use the website order form.</p>
+    <div class="hero-cta">
+      <a class="btn btn-gold" href="https://wa.me/923068988411" target="_blank" rel="noopener">💬 WhatsApp: 0306-8988411</a>
+      <a class="btn btn-outline" href="tel:+923390011126">📞 Call: 0339-0011126</a>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= OTHER SITES ======================= -->
+<section class="section" id="otherSitesSection" style="display:none;">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Our Other Websites</h2>
+      <p>Explore our other platforms.</p>
+    </div>
+    <div class="other-sites" id="otherSitesList"></div>
+  </div>
+</section>
+
+<!-- ======================= FOOTER ======================= -->
+<footer>
+  <div class="wrap">
+    26 Mart Mobiles — Wah Cantt &amp; Basti &nbsp;|&nbsp;
+    <a href="#" onclick="openAdminGate(); return false;">Admin</a>
+  </div>
+</footer>
+
+<a class="float-wa" href="https://wa.me/923068988411" target="_blank" rel="noopener" title="WhatsApp">
+  <svg viewBox="0 0 32 32" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+    <path d="M16.02 3C9.4 3 4 8.38 4 15c0 2.3.65 4.46 1.77 6.3L4 29l7.9-1.72A11.9 11.9 0 0 0 16.02 27C22.63 27 28 21.62 28 15S22.63 3 16.02 3Zm0 21.7c-1.9 0-3.68-.52-5.2-1.42l-.37-.22-4.4.96.96-4.3-.24-.38A9.6 9.6 0 0 1 6.3 15c0-5.36 4.36-9.7 9.72-9.7 5.36 0 9.7 4.34 9.7 9.7s-4.34 9.7-9.7 9.7Zm5.3-7.27c-.29-.15-1.71-.85-1.98-.94-.27-.1-.46-.15-.66.14-.2.29-.76.94-.93 1.14-.17.2-.34.22-.63.07-.29-.14-1.22-.45-2.32-1.43-.86-.76-1.44-1.71-1.6-2-.17-.29-.02-.44.13-.59.13-.13.29-.34.43-.5.15-.17.2-.29.29-.49.1-.2.05-.37-.02-.51-.07-.15-.66-1.6-.9-2.18-.24-.58-.48-.5-.66-.5h-.56c-.2 0-.51.07-.78.36-.27.29-1.02 1-1.02 2.44 0 1.44 1.05 2.83 1.2 3.03.15.2 2.07 3.17 5.02 4.44.7.3 1.25.48 1.68.62.7.22 1.34.19 1.84.12.56-.08 1.71-.7 1.95-1.37.24-.68.24-1.26.17-1.38-.07-.12-.26-.19-.55-.34Z"/>
+  </svg>
+</a>
+
+<!-- Product detail modal -->
+<div class="modal" id="productModal"><div class="modal-box"><button class="modal-close" onclick="closeModal('productModal')">×</button><div id="productModalBody"></div></div></div>
+<!-- Image viewer -->
+<div class="modal" id="imageModal"><div class="modal-box" style="max-width:900px;text-align:center"><button class="modal-close" onclick="closeModal('imageModal')">×</button><img id="fullImage" class="detail-image" style="cursor:default;max-height:80vh" alt="Full product image"></div></div>
+<!-- Order modal -->
+<div class="modal" id="orderModal"><div class="modal-box"><button class="modal-close" onclick="closeModal('orderModal')">×</button><h2>Place Your Order</h2><p id="orderProductName" style="color:var(--muted)"></p><form id="orderForm" onsubmit="submitOrder(event)"><div class="form-grid"><input id="oName" required placeholder="Full name"><input id="oPhone" required type="tel" placeholder="Phone number"><input id="oArea" required placeholder="Area / sector"><textarea id="oAddress" class="full" required placeholder="Delivery address"></textarea><select id="oPayment" class="full" required><option value="">Select payment method</option><option>Cash on Delivery</option><option>Pay at Shop Pickup</option></select></div><button class="save-btn" type="submit">Confirm Order</button><div id="orderMsg" class="admin-msg"></div></form></div></div>
+<!-- Login/signup modal -->
+<div class="modal" id="authModal"><div class="modal-box" style="max-width:420px"><button class="modal-close" onclick="closeModal('authModal')">×</button><h2 id="authTitle">Login</h2><form onsubmit="submitAuth(event)"><input id="authEmail" type="email" required placeholder="Email" style="width:100%;padding:10px;margin-bottom:10px;border:1px solid var(--line);border-radius:8px"><input id="authPassword" type="password" minlength="6" required placeholder="Password (minimum 6 characters)" style="width:100%;padding:10px;margin-bottom:10px;border:1px solid var(--line);border-radius:8px"><button class="save-btn" type="submit" id="authSubmit">Login</button><div id="authMsg" class="admin-msg"></div></form><button class="small-btn" style="margin-top:8px" onclick="toggleAuthMode()">Switch Login / Sign Up</button></div></div>
+
+<!-- ======================= ADMIN GATE ======================= -->
+<div class="admin-gate" id="adminGate">
+  <div class="admin-box">
+    <h3>Admin Access</h3>
+    <p style="font-size:13px;color:var(--muted)">Please sign in with an authorized Firebase admin account, then open this panel.</p>
+    <button class="go" style="width:100%;margin-bottom:8px" onclick="openAuthModal('login');closeAdminGate()">Login / Sign Up</button>
+    <div class="admin-err" id="adminErr"></div>
+    <div class="row">
+      <button class="cancel" onclick="closeAdminGate()">Cancel</button>
+      <button class="go" onclick="checkAdminPin()">Continue</button>
+    </div>
+  </div>
+</div>
+
+<!-- ======================= ADMIN PANEL ======================= -->
+<section id="adminPanel">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Admin Panel</h2>
+      <p>Manage products, variants, announcements, featured phones and orders.</p>
+    </div>
+    <div class="demo-banner" id="demoBanner" style="display:none;">
+      Demo mode: Firebase abhi set nahi hua, is liye yeh data sirf test ke liye hai — GitHub Pages par publish karne par save nahi hoga. Handover guide mein Firebase setup ka tareeqa dekhein.
+    </div>
+
+    <div class="admin-form">
+      <div class="f-row">
+        <div><label>Model family / main name</label><input type="text" id="fBaseName" placeholder="Spark Go 3"></div>
+        <div><label>Variant</label><input type="text" id="fVariant" placeholder="4GB / 128GB"></div>
+      </div>
+      <div class="f-row">
+        <div><label>Display name</label><input type="text" id="fName" placeholder="Spark Go 3 4GB/128GB"></div>
+        <div><label>Sale price (Rs.)</label><input type="number" id="fPrice" min="0" placeholder="45000"></div>
+      </div>
+      <div class="f-row">
+        <div><label>Before-discount price (Rs.)</label><input type="number" id="fOldPrice" min="0" placeholder="50000"></div>
+        <div><label>Quantity (stock)</label><input type="number" id="fQty" min="0" placeholder="5"></div>
+      </div>
+      <div class="f-row">
+        <div><label>Image path / URL</label><input type="text" id="fImage" placeholder="images/spark-go-3.jpg"></div>
+        <div><label>Specifications</label><input type="text" id="fSpecs" placeholder="RAM, storage, display, camera, battery..."></div>
+      </div>
+      <div class="f-row">
+        <div><label>Brand / Company</label><input type="text" id="fCompany" placeholder="Tecno"></div>
+        <div><label>Category</label><input type="text" id="fCategory" placeholder="Smartphone"></div>
+      </div>
+      <div class="f-row"><div><label><input type="checkbox" id="fGift" style="width:auto;margin-right:6px;"> Free gift</label></div><div><label><input type="checkbox" id="fFeatured" style="width:auto;margin-right:6px;"> Show at top</label></div></div>
+      <button class="save-btn" onclick="addPhone()">Add Mobile / Variant</button><div class="admin-msg" id="adminMsg"></div>
+    </div>
+    <div class="admin-form">
+      <label>Website announcement</label><input type="text" id="announcementInput" placeholder="Example: Eid Sale — Up to Rs. 5,000 off selected phones"><button class="save-btn" onclick="saveAnnouncement()">Save Announcement</button><div class="admin-msg" id="announcementMsg"></div>
+    </div>
+
+    <div class="admin-form">
+      <label>Bulk Add (add many mobiles/variants at once)</label>
+      <div style="font-size:12px; color:var(--muted); background:#EEF0F8; border-radius:8px; padding:10px 12px; margin-bottom:10px; line-height:1.5;">
+        One line = one mobile/variant. Separate fields with <b>|</b> in this order:<br>
+        <code>Model family | Variant | Sale Price | Before-discount Price | Quantity | Image path | Specs | Brand | Category | Gift(yes/no) | Featured(yes/no)</code><br><br>
+        Example:<br>
+        <code>Spark Go 3 | 4GB/128GB | 45000 | 50000 | 10 | images/go3.jpg | RAM: 4GB; Storage: 128GB | Tecno | Smartphone | yes | no</code>
+      </div>
+      <textarea id="bulkInput" rows="6" style="width:100%; padding:9px 10px; border:1px solid var(--line); border-radius:8px; font-size:13px; font-family:inherit;" placeholder="Paste multiple lines here..."></textarea>
+      <button class="save-btn" onclick="bulkAddPhones()">Add All</button><div class="admin-msg" id="bulkMsg"></div>
+    </div>
+
+    <div style="display:flex; align-items:center; gap:10px; margin:14px 0; flex-wrap:wrap;">
+      <button class="close-admin" onclick="bulkDeleteSelected()">Delete Selected</button>
+      <span id="selectedCountNote" style="font-size:12.5px; color:var(--muted);">0 selected</span>
+    </div>
+    <table class="admin-table">
+      <thead>
+        <tr><th><input type="checkbox" id="selectAllCheckbox" onchange="toggleSelectAll(this)"></th><th>Image</th><th>Model / Variant</th><th>Sale</th><th>Before</th><th>Qty</th><th>Featured</th><th></th></tr>
+      </thead>
+      <tbody id="adminTableBody"></tbody>
+    </table>
+
+    <button class="close-admin" onclick="closeAdminPanel()">Admin Panel Band Karein</button>
+  </div>
+</section>
+
+<script>
+/* =========================================================================
+   CONFIG — YEH HISSA AAP KHUD EDIT KAR SAKTE HAIN
+   ========================================================================= */
+
+// Offer strip mein ghoomne wale messages
+const OFFER_MESSAGES = [
+  "✔ Koi Advance Payment Nahi",
+  "🚚 Wah Cantt Mein Free Home Delivery — 24 Ghanton Mein",
+  "🎁 Har Mobile Ke Sath Free Gift (Watch / Power Bank aur bohot kuch)",
+  "📆 Aasan Installment Options",
+  "⏰ Limited Time Offer — Jald Order Karein"
+];
+
+// "Our Other Websites" links — yahan apni doosri websites ke links add karein
+// Misaal: {name:"26 Mart Fashion", url:"https://username.github.io/26mart-fashion"}
+const OTHER_SITES = [
+  // {name:"26 Mart Fashion", url:"https://example.com"},
+];
+
+// WhatsApp / call numbers (agar badalne hon to yahan bhi update karein)
+const WHATSAPP_NUMBER = "923068988411";
+const CALL_NUMBER = "923390011126";
+
+// Admin access is controlled ONLY by Firebase Auth UID(s) here — the real
+// enforcement lives in firestore.rules on the server, this list is just
+// what the admin panel UI checks against for the logged-in user.
+const ADMIN_UIDS = ["vi8TxzARJpaM746urZnoqbY18Nv1"];
+
+// ---- FIREBASE CONFIG ----
+// Apna Firebase project banane ke baad, yahan apni config paste karein.
+// Jab tak apiKey "YOUR_API_KEY" hi hai, website automatically "demo mode" mein chalegi.
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyCLQC43QlH0RbByCXH2kHIoZD5YXBVchb4",
+  authDomain: "website-26mart.firebaseapp.com",
+  projectId: "website-26mart",
+  storageBucket: "website-26mart.firebasestorage.app",
+  messagingSenderId: "890672783913",
+  appId: "1:890672783913:web:97471b506350c1f5ffb238"
+};
+
+/* =========================================================================
+   ENGINE — is hisse ko chhairne ki zaroorat nahi
+   ========================================================================= */
+
+let phones = [];
+let searchQuery = '';
+let activeCategory = 'all';
+let activeCompany = 'all';
+let activePriceRange = 'all';
+let usingFirebase = false;
+let db = null;
+let auth = null;
+let authMode = 'login';
+let selectedPhone = null;
+let selectedFamily = [];
+
+function isFirebaseConfigured(){ return !!(FIREBASE_CONFIG.apiKey && FIREBASE_CONFIG.apiKey !== 'YOUR_API_KEY'); }
+function safeNum(v){ const n=Number(v); return Number.isFinite(n)?n:0; }
+function fmtPrice(n){ return 'Rs. ' + safeNum(n).toLocaleString('en-PK'); }
+function escapeHtml(s){ const d=document.createElement('div'); d.textContent=s==null?'':String(s); return d.innerHTML; }
+function normalizeFamily(p){ return String(p.baseName || p.name || '').trim().toLowerCase().replace(/\s+/g,' '); }
+function familyName(p){ return p.baseName || String(p.name||'').replace(/\s+(\d+GB|\d+GB\/\d+GB|\d+\/\d+|\d+GB\s*RAM|\d+GB\s*ROM).*$/i,'').trim() || p.name; }
+function waLink(phone){ return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent('Hello, I am interested in '+phone.name+' ('+fmtPrice(phone.price)+').')}`; }
+
+async function initStorage(){
+  if(isFirebaseConfigured()){
+    try{
+      firebase.initializeApp(FIREBASE_CONFIG); db=firebase.firestore(); auth=firebase.auth(); usingFirebase=true;
+      db.collection('phones').onSnapshot(snap=>{ phones=snap.docs.map(d=>({id:d.id,...d.data()})); buildFilterOptions(); renderShop(); renderAdminTable(); }, err=>{ console.error(err); document.getElementById('loadingNote').textContent='Unable to load products. Please try again.'; });
+      db.collection('settings').doc('site').onSnapshot(doc=>{ const a=doc.exists?(doc.data().announcement||''):''; renderOfferStrip(a); document.getElementById('announcementInput').value=a; });
+      auth.onAuthStateChanged(user=>{ const st=document.getElementById('userStatus'); st.textContent=user?`Signed in: ${user.email}`:''; });
+      return;
+    }catch(e){ console.error(e); }
+  }
+  usingFirebase=false; document.getElementById('demoBanner').style.display='block'; renderOfferStrip(''); buildFilterOptions(); renderShop(); renderAdminTable();
+}
+function renderOfferStrip(announcement=''){ const track=document.getElementById('offerTrack'); const msgs=[announcement,...OFFER_MESSAGES].filter(Boolean); const items=msgs.map(m=>`<span>${escapeHtml(m)}</span>`).join(''); track.innerHTML=items+items; }
+function buildFilterOptions(){
+  const categories = [...new Set(phones.map(p=>p.category).filter(Boolean))];
+  const companies = [...new Set(phones.map(p=>p.company).filter(Boolean))];
+  const chipsWrap = document.getElementById('categoryChips');
+  if(chipsWrap){
+    chipsWrap.innerHTML = '<button class="chip active" data-cat="all" onclick="onCategoryChange(\'all\')">All</button>' +
+      categories.map(c=>`<button class="chip" data-cat="${escapeHtml(c)}" onclick="onCategoryChange('${escapeHtml(c).replace(/'/g,"\\'")}')">${escapeHtml(c)}</button>`).join('');
+  }
+  const companySel = document.getElementById('companyFilter');
+  if(companySel){
+    const currentVal = companySel.value;
+    companySel.innerHTML = '<option value="all">All Brands</option>' + companies.map(c=>`<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('');
+    if(companies.includes(currentVal)) companySel.value = currentVal;
+  }
+}
+function onSearch(val){ searchQuery = val.trim().toLowerCase(); renderShop(); }
+function onCategoryChange(cat){
+  activeCategory = cat;
+  document.querySelectorAll('#categoryChips .chip').forEach(c=>c.classList.toggle('active', c.dataset.cat===cat));
+  renderShop();
+}
+function onCompanyChange(val){ activeCompany = val; renderShop(); }
+function onPriceChange(val){ activePriceRange = val; renderShop(); }
+function passesFilters(p){
+  if(searchQuery){
+    const hay = ((p.name||'')+' '+(p.baseName||'')+' '+(p.company||'')).toLowerCase();
+    if(!hay.includes(searchQuery)) return false;
+  }
+  if(activeCategory!=='all' && p.category!==activeCategory) return false;
+  if(activeCompany!=='all' && p.company!==activeCompany) return false;
+  if(activePriceRange!=='all'){
+    const [lo,hi] = activePriceRange.split('-').map(Number);
+    const pr = safeNum(p.price);
+    if(pr < lo || pr > hi) return false;
+  }
+  return true;
+}
+function sortedPhones(){ return [...phones].sort((a,b)=>Number(!!b.featured)-Number(!!a.featured)); }
+function renderShop(){
+  document.getElementById('loadingNote').style.display='none'; const grid=document.getElementById('productGrid'); const empty=document.getElementById('emptyNote'); grid.innerHTML='';
+  const visible = sortedPhones().filter(passesFilters);
+  if(!visible.length){empty.style.display='block';return} empty.style.display='none';
+  const groups=new Map(); visible.forEach(p=>{const key=normalizeFamily(p); if(!groups.has(key)) groups.set(key,[]); groups.get(key).push(p);});
+  groups.forEach(group=>{
+    const p=group[0], inStock=group.some(x=>safeNum(x.qty)>0); const card=document.createElement('div'); card.className='pcard '+(group.some(x=>x.featured)?'featured':'');
+    const img=p.image?`<img src="${escapeHtml(p.image)}" alt="${escapeHtml(familyName(p))}" onerror="this.parentElement.innerHTML='<div class=&quot;noimg&quot;>Image unavailable</div>'">`:'<div class="noimg">No image</div>';
+    card.innerHTML=`${group.some(x=>x.featured)?'<div class="featured-label">★ Featured</div>':''}${p.gift?'<div class="gift-flag">🎁 Free Gift</div>':''}<div class="imgwrap">${img}</div><div class="body"><p class="pname">${escapeHtml(familyName(p))}</p><div><span class="old-price">${p.oldPrice?fmtPrice(p.oldPrice):''}</span><span class="sale-price">${fmtPrice(p.price)}</span></div><div class="stock-row ${inStock?'in':'out'}"><span class="dot ${inStock?'':'out'}"></span>${inStock?'Stock Available':'Out of Stock'}</div><div class="view-count">${safeNum(p.views)} total views</div><button class="order-btn" onclick="openProduct('${p.id}')">View Variants & Details</button></div>`;
+    grid.appendChild(card);
+  });
+}
+function openProduct(id){
+  const base=phones.find(p=>p.id===id); if(!base)return; selectedFamily=phones.filter(p=>normalizeFamily(p)===normalizeFamily(base)); selectedPhone=base; renderProductModal(); document.getElementById('productModal').classList.add('show'); incrementView(base.id);
+}
+function renderProductModal(){
+  const p=selectedPhone, variants=selectedFamily; const image=p.image?`<img class="detail-image" src="${escapeHtml(p.image)}" alt="${escapeHtml(p.name)}" onclick="openImage('${escapeHtml(p.image)}','${escapeHtml(p.name)}')">`:'<div class="detail-image noimg">No image available</div>';
+  document.getElementById('productModalBody').innerHTML=`<div class="detail-grid"><div>${image}</div><div><h2 style="margin-top:0">${escapeHtml(familyName(p))}</h2><div class="variant-list">${variants.map(v=>`<button class="variant-btn ${v.id===p.id?'active':''}" onclick="selectVariant('${v.id}')">${escapeHtml(v.variant||v.name)}</button>`).join('')}</div><h3>${escapeHtml(p.variant||p.name)}</h3><div><span class="old-price">${p.oldPrice?fmtPrice(p.oldPrice):''}</span><span class="sale-price">${fmtPrice(p.price)}</span></div><p class="stock-row ${safeNum(p.qty)>0?'in':'out'}">${safeNum(p.qty)>0?'Stock Available':'Out of Stock'}</p><div class="view-count">${safeNum(p.views)} total views</div><div class="specs">${escapeHtml(p.specs||'Specifications will be added soon.')}</div><div class="share-row"><button class="small-btn" onclick="shareProduct()">↗ Share</button><button class="small-btn" onclick="openImage('${escapeHtml(p.image||'')}','${escapeHtml(p.name)}')">⌕ Full Image</button>${safeNum(p.qty)>0?'<button class="small-btn" style="background:var(--green);color:#fff" onclick="openOrder()">Order Now</button>':''}</div></div></div>`;
+}
+function selectVariant(id){ const p=selectedFamily.find(x=>x.id===id); if(p){selectedPhone=p;renderProductModal();incrementView(p.id);} }
+function openImage(src,alt){if(!src)return;document.getElementById('fullImage').src=src;document.getElementById('fullImage').alt=alt||'Product image';document.getElementById('imageModal').classList.add('show');}
+function closeModal(id){document.getElementById(id).classList.remove('show');}
+async function shareProduct(){ const url=location.href.split('#')[0]+'#phone='+encodeURIComponent(selectedPhone.id); const data={title:selectedPhone.name,text:'Check out '+selectedPhone.name+' at 26 Mart Mobiles',url}; try{if(navigator.share)await navigator.share(data);else{await navigator.clipboard.writeText(url);alert('Product link copied.');}}catch(e){} }
+async function incrementView(id){ if(!usingFirebase)return; try{await db.collection('phones').doc(id).update({views:firebase.firestore.FieldValue.increment(1)});}catch(e){console.warn('View count failed',e);} }
+function openOrder(){ if(!selectedPhone)return; document.getElementById('orderProductName').textContent=`${selectedPhone.name} — ${fmtPrice(selectedPhone.price)}`; document.getElementById('orderMsg').textContent=''; document.getElementById('orderModal').classList.add('show'); }
+async function submitOrder(e){ e.preventDefault(); const msg=document.getElementById('orderMsg'); msg.className='admin-msg'; msg.textContent=''; const order={phoneId:selectedPhone.id,phoneName:selectedPhone.name,price:safeNum(selectedPhone.price),customerName:document.getElementById('oName').value.trim(),phone:document.getElementById('oPhone').value.trim(),area:document.getElementById('oArea').value.trim(),address:document.getElementById('oAddress').value.trim(),payment:document.getElementById('oPayment').value,createdAt:firebase.firestore?firebase.firestore.FieldValue.serverTimestamp():new Date().toISOString(),status:'new'}; if(!usingFirebase){msg.className='admin-msg ok';msg.textContent='Order form is ready, but Firebase is not connected yet.';return;} try{await db.collection('orders').add(order);msg.className='admin-msg ok';msg.textContent='Order received. No payment is required now. Pay at delivery or shop pickup.';document.getElementById('orderForm').reset();}catch(err){console.error(err);msg.className='admin-msg err';msg.textContent='Order could not be submitted. Please try again.';} }
+
+function openAuthModal(mode){authMode=mode;document.getElementById('authTitle').textContent=mode==='login'?'Login':'Create Account';document.getElementById('authSubmit').textContent=mode==='login'?'Login':'Sign Up';document.getElementById('authMsg').textContent='';document.getElementById('authModal').classList.add('show');}
+function toggleAuthMode(){openAuthModal(authMode==='login'?'signup':'login');}
+async function submitAuth(e){e.preventDefault();const msg=document.getElementById('authMsg');msg.className='admin-msg';msg.textContent='';if(!auth){msg.className='admin-msg err';msg.textContent='Account system is not connected. Please configure Firebase Authentication.';return;}const email=document.getElementById('authEmail').value.trim(),pass=document.getElementById('authPassword').value;try{if(authMode==='signup')await auth.createUserWithEmailAndPassword(email,pass);else await auth.signInWithEmailAndPassword(email,pass);msg.className='admin-msg ok';msg.textContent=authMode==='signup'?'Account created successfully.':'Logged in successfully.';setTimeout(()=>closeModal('authModal'),600);}catch(err){console.error(err);const map={'auth/email-already-in-use':'This email is already registered.','auth/invalid-email':'Please enter a valid email.','auth/weak-password':'Password must be at least 6 characters.','auth/invalid-credential':'Email or password is incorrect.'};msg.className='admin-msg err';msg.textContent=map[err.code]||'Something went wrong. Please check Firebase Authentication settings and try again.';}}
+
+function renderOtherSites(){if(!OTHER_SITES.length)return;document.getElementById('otherSitesSection').style.display='block';document.getElementById('otherSitesList').innerHTML=OTHER_SITES.map(s=>`<a href="${escapeHtml(s.url)}" target="_blank" rel="noopener">${escapeHtml(s.name)}</a>`).join('');}
+function openAdminGate(){document.getElementById('adminGate').classList.add('show');document.getElementById('adminErr').textContent='';}
+function closeAdminGate(){document.getElementById('adminGate').classList.remove('show');}
+function checkAdminPin(){ closeAdminGate(); showAdminIfAuthorized(); }
+function showAdminIfAuthorized(){ if(!auth||!auth.currentUser){openAuthModal('login');return;} if(!ADMIN_UIDS.includes(auth.currentUser.uid)){alert('Your account is not authorized for admin access.');return;} document.getElementById('adminPanel').style.display='block';document.getElementById('adminPanel').scrollIntoView({behavior:'smooth'}); }
+function closeAdminPanel(){document.getElementById('adminPanel').style.display='none';window.scrollTo({top:0,behavior:'smooth'});}
+async function addPhone(){
+ const msg=document.getElementById('adminMsg');msg.className='admin-msg';msg.textContent=''; if(!auth||!auth.currentUser){msg.className='admin-msg err';msg.textContent='Please log in with an authorized admin account.';return;}
+ const baseName=document.getElementById('fBaseName').value.trim(),variant=document.getElementById('fVariant').value.trim(),name=document.getElementById('fName').value.trim()||baseName,price=safeNum(document.getElementById('fPrice').value),oldPrice=safeNum(document.getElementById('fOldPrice').value),qty=safeNum(document.getElementById('fQty').value),image=document.getElementById('fImage').value.trim(),specs=document.getElementById('fSpecs').value.trim(),company=document.getElementById('fCompany').value.trim(),category=document.getElementById('fCategory').value.trim(),gift=document.getElementById('fGift').checked,featured=document.getElementById('fFeatured').checked;
+ if(!baseName||!name||price<=0){msg.className='admin-msg err';msg.textContent='Model name and a valid sale price are required.';return;}
+ try{await db.collection('phones').add({baseName,variant,name,price,oldPrice,qty,image,specs,company,category,gift,featured,views:0,createdAt:firebase.firestore.FieldValue.serverTimestamp()});msg.className='admin-msg ok';msg.textContent='Mobile/variant added.';['fBaseName','fVariant','fName','fPrice','fOldPrice','fQty','fImage','fSpecs','fCompany','fCategory'].forEach(id=>document.getElementById(id).value='');document.getElementById('fGift').checked=false;document.getElementById('fFeatured').checked=false;}catch(e){console.error(e);msg.className='admin-msg err';msg.textContent='Save failed. Check Firebase Authentication and Firestore rules.';}
+}
+async function bulkAddPhones(){
+  const msg=document.getElementById('bulkMsg'); msg.className='admin-msg'; msg.textContent='';
+  if(!auth||!auth.currentUser){msg.className='admin-msg err';msg.textContent='Please log in with an authorized admin account.';return;}
+  const lines=document.getElementById('bulkInput').value.split('\n').map(l=>l.trim()).filter(Boolean);
+  if(!lines.length){msg.className='admin-msg err';msg.textContent='Please enter at least one line.';return;}
+  const rows=[];
+  lines.forEach(line=>{
+    const parts=line.split('|').map(s=>s.trim());
+    const [baseName,variant,price,oldPrice,qty,image,specs,company,category,gift,featured]=parts;
+    if(!baseName||!price) return;
+    rows.push({
+      baseName, variant: variant||'', name: variant?(baseName+' '+variant):baseName,
+      price: safeNum(price), oldPrice: safeNum(oldPrice), qty: safeNum(qty),
+      image: image||'', specs: specs ? specs.split(';').map(s=>s.trim()).filter(Boolean).join('\n') : '',
+      company: company||'', category: category||'',
+      gift: (gift||'').toLowerCase()==='yes', featured: (featured||'').toLowerCase()==='yes',
+      views:0, createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+  });
+  if(!rows.length){msg.className='admin-msg err';msg.textContent='No valid lines found.';return;}
+  try{
+    const batch=db.batch();
+    rows.forEach(r=>{ const ref=db.collection('phones').doc(); batch.set(ref,r); });
+    await batch.commit();
+    msg.className='admin-msg ok'; msg.textContent=rows.length+' mobiles/variants added.';
+    document.getElementById('bulkInput').value='';
+  }catch(e){ console.error(e); msg.className='admin-msg err'; msg.textContent='Save failed. Check Firebase Authentication and Firestore rules.'; }
+}
+async function saveAnnouncement(){const msg=document.getElementById('announcementMsg');if(!auth||!auth.currentUser){msg.className='admin-msg err';msg.textContent='Please log in as an authorized admin.';return;}try{await db.collection('settings').doc('site').set({announcement:document.getElementById('announcementInput').value.trim()},{merge:true});msg.className='admin-msg ok';msg.textContent='Announcement saved.';}catch(e){msg.className='admin-msg err';msg.textContent='Announcement could not be saved.';}}
+function renderAdminTable(){const body=document.getElementById('adminTableBody');if(!body)return;body.innerHTML='';phones.forEach(p=>{const tr=document.createElement('tr');tr.innerHTML=`<td><input type="checkbox" class="row-check" value="${p.id}" onchange="updateSelectedCount()"></td><td><img src="${escapeHtml(p.image||'')}"></td><td>${escapeHtml(p.baseName||p.name)}<br><small>${escapeHtml(p.variant||'')}</small></td><td><input type="text" value="${safeNum(p.price)}" data-field="price" data-id="${p.id}"></td><td><input type="text" value="${safeNum(p.oldPrice)}" data-field="oldPrice" data-id="${p.id}"></td><td><input type="text" value="${safeNum(p.qty)}" data-field="qty" data-id="${p.id}"></td><td><input type="checkbox" ${p.featured?'checked':''} data-field="featured" data-id="${p.id}"></td><td><button class="upd" onclick="updatePhone('${p.id}')">Update</button><button class="del" onclick="deletePhone('${p.id}')">Delete</button></td>`;body.appendChild(tr);});updateSelectedCount();}
+function toggleSelectAll(checkbox){ document.querySelectorAll('.row-check').forEach(c=>c.checked=checkbox.checked); updateSelectedCount(); }
+function updateSelectedCount(){ const el=document.getElementById('selectedCountNote'); if(el) el.textContent = document.querySelectorAll('.row-check:checked').length + ' selected'; }
+async function bulkDeleteSelected(){
+  if(!auth||!auth.currentUser){alert('Please login as admin.');return;}
+  const ids=Array.from(document.querySelectorAll('.row-check:checked')).map(c=>c.value);
+  if(!ids.length){alert('Select at least one mobile first.');return;}
+  if(!confirm('Delete '+ids.length+' selected items? This cannot be undone.')) return;
+  try{
+    const batch=db.batch();
+    ids.forEach(id=>batch.delete(db.collection('phones').doc(id)));
+    await batch.commit();
+    const selectAll=document.getElementById('selectAllCheckbox'); if(selectAll) selectAll.checked=false;
+  }catch(e){ console.error(e); alert('Delete failed.'); }
+}
+async function updatePhone(id){if(!auth||!auth.currentUser){alert('Please login as admin.');return;}const price=safeNum(document.querySelector(`input[data-id="${id}"][data-field="price"]`).value),oldPrice=safeNum(document.querySelector(`input[data-id="${id}"][data-field="oldPrice"]`).value),qty=safeNum(document.querySelector(`input[data-id="${id}"][data-field="qty"]`).value),featured=document.querySelector(`input[data-id="${id}"][data-field="featured"]`).checked;try{await db.collection('phones').doc(id).update({price,oldPrice,qty,featured});}catch(e){alert('Update failed.');}}
+async function deletePhone(id){if(!auth||!auth.currentUser)return;if(!confirm('Delete this product?'))return;try{await db.collection('phones').doc(id).delete();}catch(e){alert('Delete failed.');}}
+
+/* ---------- Init ---------- */
+renderOtherSites();
+initStorage().then(()=>{ if(location.hash.startsWith('#phone=')){const id=decodeURIComponent(location.hash.slice(7));setTimeout(()=>openProduct(id),500);} });
+</script>
 </body>
 </html>
